@@ -40,11 +40,12 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const appFirebase = initializeApp(firebaseConfig);
 
 const app = createApp(App)
   .use(IonicVue)
-  .use(router);
+  .use(router)
+  .use(appFirebase);
   
 router.isReady().then(() => {
   app.mount('#app');
