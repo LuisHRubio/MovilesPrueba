@@ -16,12 +16,12 @@
             <div class="subtitle">Status</div>
           </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row v-for="(item,index) in listaClaves" :key="index">
           <ion-col>
-            <div>1 of 3</div>
+            <div>{{ listaKeys[index] }}</div>
           </ion-col>
           <ion-col>
-            <div>2 of 3</div>
+            <div>{{ item.status }}</div>
           </ion-col>
         </ion-row>
       </ion-grid>
