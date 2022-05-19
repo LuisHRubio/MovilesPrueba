@@ -2,28 +2,75 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Tab 3</ion-title>
+        <ion-title>Agregar claves</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Tab 3</ion-title>
+          <ion-title size="large">Agregar claves</ion-title>
         </ion-toolbar>
       </ion-header>
-      
-      <ExploreContainer name="Tab 3 page" />
+      <ion-item>
+        <ion-label>Número de claves nuevas</ion-label>
+        <ion-input
+            Type="number"
+            min="1"
+            :value="claves"
+            @ionInput="claves = parseInt($event.target.value)"
+        ></ion-input>
+      </ion-item>
+      <ion-button expand="block" @click="agregarClaves()"
+      >Agregar claves</ion-button
+      >
+      <alert-controller></alert-controller>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
+//import { defineComponent } from 'vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, alertController, IonButton, IonItem, IonInput, IonLabel,} from '@ionic/vue';
+//import ExploreContainer from '@/components/ExploreContainer.vue';
+import { getDatabase, ref, push } from "firebase/database";
 
-export default defineComponent({
+export default {
   name: 'Tab3Page',
-  components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
-});
+  components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, alertController, IonButton, IonItem,IonInput, IonLabel},
+  data() {
+    return {
+      claves: 1,
+    };
+  },
+  methods: {
+    async agregarClaves() {
+      const db = getDatabase();
+      var i;
+      var errores = 0;
+      for (i = 0; i < this.claves; i++) {
+        push(ref(db, "claves/"), {
+          status: "",
+          usuario: "",
+        })
+            .then(async () => {
+// Data saved successfully!
+            })
+            .catch(async (error) => {
+              console.log(error);
+              errores++;
+            });
+      }
+      if (errores > 0) {
+        const alert = await alertController.create({
+          cssClass: "clase claves no agregadas",
+          header: "Claves NO agregadas",
+          subHeader: "Error",
+          message: "No se agregagor las claves",
+          buttons: ["Aceptar"],
+        });
+        await alert.present();
+      }
+    }
+  }
+};
 </script>
